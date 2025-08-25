@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestor de Tareas</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f6f8; padding: 20px; }
+    h1 { color: #333; }
+    input, button { padding: 8px; margin: 5px; border-radius: 5px; border: 1px solid #ccc; }
+    button { background: #007BFF; color: white; cursor: pointer; }
+    button:hover { background: #0056b3; }
+    ul { list-style: none; padding: 0; }
+    li { background: white; padding: 10px; margin: 5px 0; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
+    small { color: gray; margin-left: 10px; }
+  </style>
+</head>
+<body>
+  <h1>📋 Mis Tareas</h1>
+  <input id="nuevaTarea" placeholder="Escribe una tarea">
+  <input id="fechaTarea" type="date">
+  <button onclick="agregar()">Agregar</button>
+
+  <ul id="lista"></ul>
+
+  <script>
+    const API = "http://localhost:3000/tareas";
+
+    async function cargar() {
+      const res = await fetch(API);
+      const data = await res.json();
+      const lista = document.getElementById("lista");
+      lista.innerHTML = "";
+      data.forEach(t => {
+        lista.innerHTML += `<li>
+          <span>${t.texto} [${t.completada ? "✔️" : "❌"}] 
+          <small>📅 ${t.fecha}</small></span>
+          <button onclick="eliminar(${t.id})">Eliminar</button>
+        </li>`;
+      });
+    }
+
+    async function agregar() {
+      const texto = document.getElementById("nuevaTarea").value;
+      const fecha = document.getElementById("fechaTarea").value || new Date().toISOString().split("T")[0];
+      await fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ texto, fecha })
+      });
+      document.getElementById("nuevaTarea").value = "";
+      document.getElementById("fechaTarea").value = "";
+      cargar();
+    }
+
+    async function eliminar(id) {
+      await fetch(API + "/" + id, { method: "DELETE" });
+      cargar();
+    }
+
+    cargar();
+  </script>
+</body>
+</html>
