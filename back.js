@@ -52,5 +52,11 @@ app.delete("/tareas/:id", (req, res) => {
 });
 
 // Arrancar servidor
-const PORT = 3000;
-app.listen(PORT, () => console.log(`🚀 Servidor corriendo en puerto ${PORT}`));
+
+
+const PORT = 8000;
+app.listen(PORT, '0.0.0.0', () => 
+  console.log(`🚀 Servidor corriendo en puerto ${PORT}`)
+);
+
+
