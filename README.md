@@ -169,10 +169,10 @@ Asegúrate de que tu Security Group tenga estas reglas:
 
 👉 Causa: No se instalaron las dependencias.
 ✅ Solución: Ejecuta:
-
+```bash
 npm install
 
-
+```
 
 2. Error: Cannot GET /
 
@@ -195,9 +195,10 @@ Vuelve a probar http://<tu-ip>:8000.
 👉 Causa: El servidor no se reinicia automáticamente.
 ✅ Solución: Actualiza los cambios de github
 
+```bash
 git pull origin main
 node back.js
-
+```
 
 ```
 
