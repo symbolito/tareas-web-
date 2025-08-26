@@ -53,9 +53,9 @@ app.delete("/tareas/:id", (req, res) => {
 
 // Arrancar servidor
 const PORT = 8000;
-const path = require('path');
 
-// Servir archivos estáticos desde la carpeta public
+const path = require('path');
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.listen(PORT, () => console.log(`🚀 Servidor corriendo en puerto ${PORT}`));
+
