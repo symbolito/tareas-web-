@@ -42,13 +42,13 @@ node back.js
 Si todo funciona bien, deberías ver:
 
 ```
-🚀 Servidor corriendo en puerto 3000
+🚀 Servidor corriendo en puerto 8000
 ```
 
 ## Paso 4: Acceder al Frontend
 
-1. Abre el archivo `index.html` en tu navegador.
-2. El frontend se conectará automáticamente al backend en `http://localhost:3000/tareas`.
+1. Abre el archivo `front.html` en tu navegador.
+2. El frontend se conectará automáticamente al backend en `http://localhost:8000/tareas`.
 
 ## Paso 5: Detener el Servidor
 
@@ -68,7 +68,7 @@ Ctrl + C
 * **Security Group** configurado con:
 
   * Puerto **22** (SSH)
-  * Puerto **3000** (para Node.js backend)
+  * Puerto **8000** (para Node.js backend)
 * Acceso SSH a la instancia.
 
 ---
@@ -134,7 +134,7 @@ node back.js
 El servidor correrá en:
 
 ```
-http://IP_PUBLICA_EC2:3000/tareas
+http://IP_PUBLICA_EC2:8000/tareas
 ```
 
 ---
@@ -144,7 +144,7 @@ http://IP_PUBLICA_EC2:3000/tareas
 En tu PC, abre el `index.html` y edita la línea del **API**:
 
 ```javascript
-const API = "http://IP_PUBLICA_EC2:3000/tareas";
+const API = "http://IP_PUBLICA_EC2:8000/tareas";
 ```
 
 Guarda y abre `index.html` en tu navegador.
@@ -158,7 +158,7 @@ Asegúrate de que tu Security Group tenga estas reglas:
 | Tipo              | Puerto | Origen    | Descripción       |
 | ----------------- | ------ | --------- | ----------------- |
 | SSH               | 22     | Tu IP     | Acceso SSH        |
-| TCP Personalizado | 3000   | 0.0.0.0/0 | Acceso al backend |
+| TCP Personalizado | 8000   | 0.0.0.0/0 | Acceso al backend |
 
 ---
 
@@ -172,14 +172,14 @@ Asegúrate de que tu Security Group tenga estas reglas:
 
 npm install
 
-2. Error: listen EADDRINUSE: address already in use 3000
+2. Error: listen EADDRINUSE: address already in use 8000
 
-👉 Causa: Ya hay otro proceso usando el puerto 3000.
+👉 Causa: Ya hay otro proceso usando el puerto 8000.
 ✅ Solución:
 
 Busca y detén el proceso:
 
-lsof -i :3000
+lsof -i :8000
 kill -9 <PID>
 
 
@@ -188,16 +188,16 @@ O cambia el puerto en server.js.
 3. Error: Cannot GET /
 
 👉 Causa: Estás intentando abrir la raíz del servidor (/), pero el backend solo responde en /tareas.
-✅ Solución: Usa la ruta correcta en el frontend (http://<IP>:3000/tareas).
+✅ Solución: Usa la ruta correcta en el frontend (http://<IP>:8000/tareas).
 
 4. El navegador no carga el frontend
 
 👉 Causa: Estás abriendo la IP pública de AWS pero el puerto no está abierto en Security Groups.
 ✅ Solución:
 
-Ve a la consola de AWS EC2 → Security Groups → abre el puerto 3000 (o el que uses).
+Ve a la consola de AWS EC2 → Security Groups → abre el puerto 8000 (o el que uses).
 
-Vuelve a probar http://<tu-ip>:3000.
+Vuelve a probar http://<tu-ip>:8000.
 
 5. CORS policy: No 'Access-Control-Allow-Origin' header
 
