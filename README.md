@@ -172,64 +172,31 @@ Asegúrate de que tu Security Group tenga estas reglas:
 
 npm install
 
-2. Error: listen EADDRINUSE: address already in use 8000
-
-👉 Causa: Ya hay otro proceso usando el puerto 8000.
-✅ Solución:
-
-Busca y detén el proceso:
-
-lsof -i :8000
-kill -9 <PID>
 
 
-O cambia el puerto en server.js.
-
-3. Error: Cannot GET /
+2. Error: Cannot GET /
 
 👉 Causa: Estás intentando abrir la raíz del servidor (/), pero el backend solo responde en /tareas.
 ✅ Solución: Usa la ruta correcta en el frontend (http://<IP>:8000/tareas).
 
-4. El navegador no carga el frontend
+3. El navegador no carga el frontend
 
 👉 Causa: Estás abriendo la IP pública de AWS pero el puerto no está abierto en Security Groups.
 ✅ Solución:
 
-Ve a la consola de AWS EC2 → Security Groups → abre el puerto 8000 (o el que uses).
+Ve a la consola de AWS EC2 → Security Groups → abre el puerto 8000 .
 
 Vuelve a probar http://<tu-ip>:8000.
 
-5. CORS policy: No 'Access-Control-Allow-Origin' header
-
-👉 Causa: El backend no permite peticiones desde el navegador.
-✅ Solución:
-
-Asegúrate de que server.js tenga cors() activado:
-
-const cors = require("cors");
-app.use(cors());
-
-6. SyntaxError: Unexpected token ... in JSON
-
-👉 Causa: Se está enviando/recibiendo un JSON malformado.
-✅ Solución:
-
-Revisa que el frontend use:
-
-headers: { "Content-Type": "application/json" }
 
 
-Y que el backend tenga:
-
-app.use(express.json());
-
-7. Cambios en el código no se ven reflejados
+4. Cambios en el código no se ven reflejados
 
 👉 Causa: El servidor no se reinicia automáticamente.
-✅ Solución: Instala nodemon:
+✅ Solución: Actualiza los cambios de github
 
-npm install -g nodemon
-nodemon server.js
+git pull origin main
+node back.js
 
 
 ```
