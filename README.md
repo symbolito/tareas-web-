@@ -200,9 +200,51 @@ git pull origin main
 node back.js
 ```
 
+Creacion de Docker
+
+ 📝 Aplicación de Tareas con Node.js + Docker
+
+Aplicación sencilla de lista de tareas (To-Do App) construida con **Node.js**, **Express** y desplegada en un contenedor **Docker**.  
+Permite **crear, listar, actualizar y eliminar tareas**, además de servir un frontend simple en `front.html`.
+2. Requisitos previos
+markdown
+Copiar código
+## 🚀 Requisitos
+
+- Tener instalado [Docker](https://www.docker.com/) en tu máquina
+- Node.js (opcional, si deseas correr la app sin Docker)
+  
+3. Estructura del proyecto
+markdown
+Copiar código
+## 📂 Estructura del proyecto
+
+Aplicacion de tareas/
+│── Dockerfile
+│── package.json
+│── back.js
+│── front.html
+
+4. Ejecutar con Docker
+
+## 🐳 Ejecutar con Docker
+
+1. Clonar este repositorio:
+   ```bash
+   git clone https://github.com/usuario/aplicacion-tareas.git
+   cd aplicacion-tareas
+Construir la imagen:
+
+```bash
+Copiar código
+docker build -t aplicacion-tareas .
 ```
+Ejecutar el contenedor:
+```
+docker run -p 8000:8000 aplicacion-tareas
+```
+Abrir en el navegador:
 
----
-
-¿Quieres que también te agregue una **versión persistente con base de datos (ej. SQLite o MongoDB)** para que en AWS no se borren las tareas al reiniciar?
+```
+http://localhost:8000
 ```
