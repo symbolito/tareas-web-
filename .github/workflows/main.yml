@@ -1,0 +1,36 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Clonar el repositorio
+      - name: Checkout del código
+        uses: actions/checkout@v3
+
+      # 2. Configurar Node.js (puedes ajustar la versión)
+      - name: Configurar Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # 3. Instalar dependencias
+      - name: Instalar dependencias
+        run: npm install
+
+      # 4. Verificar sintaxis (lint opcional)
+      - name: Verificar sintaxis
+        run: |
+          echo "Aquí podrías correr eslint si lo tienes configurado"
+          node -c server.js
+
+      # 5. Ejecutar tests (si tienes tests configurados)
+      - name: Ejecutar tests
+        run: npm test --if-present
