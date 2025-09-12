@@ -200,6 +200,30 @@ git pull origin main
 node back.js
 ```
 
+
+⚙️ GitHub Actions (CI/CD)
+
+Este proyecto usa GitHub Actions para validar el código automáticamente cada vez que se hace un push o pull request a la rama main.
+
+El workflow está definido en .github/workflows/main.yml
+
+Actualmente valida la sintaxis de back.js usando el comando:
+
+node --check back.js
+
+✅ Beneficios del Workflow
+
+Detectar errores de sintaxis antes de integrar cambios.
+
+Automatizar verificaciones en cada cambio de código.
+
+Asegurar mayor estabilidad en el proyecto.
+
+📊 Estado del Workflow
+
+👉 Solo cambia TU_USUARIO por tu nombre de usuario en GitHub para que el badge muestre si el workflow está pasando o fallando.
+
+
 Creacion de Docker
 
  📝 Aplicación de Tareas con Node.js + Docker
