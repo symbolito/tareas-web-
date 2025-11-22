@@ -3,28 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <title>Gestor de Tareas</title>
-  <style>
-    body { font-family: Arial, sans-serif; background: #f4f6f8; padding: 20px; }
-    h1 { color: #333; }
-    input, button { padding: 8px; margin: 5px; border-radius: 5px; border: 1px solid #ccc; }
-    button { background: #007BFF; color: white; cursor: pointer; }
-    button:hover { background: #0056b3; }
-    ul { list-style: none; padding: 0; }
-    li { background: white; padding: 10px; margin: 5px 0; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
-    small { color: gray; margin-left: 10px; }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>📋 Mis Tareas</h1>
-  <input id="nuevaTarea" placeholder="Escribe una tarea">
-  <input id="fechaTarea" type="date">
-  <button onclick="agregar()">Agregar</button>
+  <div class="app">
+    <header class="app-header">
+      <div class="title-group">
+        <h1><span class="title-icon">📋</span><span>Mis Tareas</span></h1>
+        <p>Organiza tus pendientes diarios con una vista clara y sencilla.</p>
+      </div>
+      <div class="badge-counter" id="badgeCantidad">0 tareas</div>
+    </header>
 
-  <ul id="lista"></ul>
+    <section class="form-row">
+      <input id="nuevaTarea" type="text" placeholder="Escribe una tarea clara y específica">
+      <input id="fechaTarea" type="date">
+      <button class="btn-primary" onclick="agregarOActualizar()">💾 Guardar</button>
+      <button class="btn-secondary" onclick="cancelarEdicion()">Cancelar</button>
+    </section>
+
+    <div id="mensaje"></div>
+
+    <div class="lista-wrapper">
+      <ul id="lista"></ul>
+    </div>
+  </div>
 
   <script>
-    const API = "http://3.96.194.27/:8000/tareas";
+    const API = "http://localhost:8000/tareas";
+    let tareaEnEdicion = null;
 
+    function actualizarBadge(cantidad) {
+      const badge = document.getElementById("badgeCantidad");
+      badge.textContent = cantidad === 1 ? "1 tarea" : cantidad + " tareas";
+    }
 
     async function cargar() {
       const res = await fetch(API);
@@ -32,29 +44,106 @@
       const lista = document.getElementById("lista");
       lista.innerHTML = "";
       data.forEach(t => {
-        lista.innerHTML += `<li>
-          <span>${t.texto} [${t.completada ? "✔️" : "❌"}] 
-          <small>📅 ${t.fecha}</small></span>
-          <button onclick="eliminar(${t.id})">Eliminar</button>
-        </li>`;
+        const estadoClase = t.completada ? "estado-completa" : "estado-pendiente";
+        const estadoTexto = t.completada ? "Completada" : "Pendiente";
+
+        lista.innerHTML += `
+          <li>
+            <div class="tarea-main">
+              <div class="tarea-texto">
+                <span>${t.texto}</span>
+                <span class="estado ${estadoClase}">${estadoTexto}</span>
+              </div>
+              <div class="tarea-fecha">📅 ${t.fecha}</div>
+            </div>
+            <div class="acciones">
+              <button class="btn-ghost" onclick="marcarCompletada(${t.id}, ${!t.completada})">
+                ${t.completada ? "Marcar pendiente" : "Marcar completada"}
+              </button>
+              <button class="btn-ghost" onclick="editar(${t.id}, '${t.texto.replace(/'/g, "\\'")}', '${t.fecha}')">
+                ✏️ Editar
+              </button>
+              <button class="btn-danger" onclick="eliminar(${t.id})">
+                🗑 Eliminar
+              </button>
+            </div>
+          </li>`;
       });
+      actualizarBadge(data.length);
     }
 
-    async function agregar() {
+    async function agregarOActualizar() {
       const texto = document.getElementById("nuevaTarea").value;
       const fecha = document.getElementById("fechaTarea").value || new Date().toISOString().split("T")[0];
-      await fetch(API, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ texto, fecha })
-      });
+      const mensaje = document.getElementById("mensaje");
+      mensaje.className = "";
+
+      if (!texto.trim()) {
+        mensaje.className = "mensaje-error";
+        mensaje.textContent = "La tarea no puede estar vacía.";
+        return;
+      }
+
+      try {
+        if (tareaEnEdicion) {
+          const res = await fetch(API + "/" + tareaEnEdicion, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ texto, fecha })
+          });
+          if (!res.ok) throw new Error();
+          mensaje.className = "mensaje-ok";
+          mensaje.textContent = "Tarea actualizada.";
+        } else {
+          const res = await fetch(API, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ texto, fecha })
+          });
+          if (!res.ok) throw new Error();
+          mensaje.className = "mensaje-ok";
+          mensaje.textContent = "Tarea agregada.";
+        }
+      } catch {
+        mensaje.className = "mensaje-error";
+        mensaje.textContent = "Error al guardar la tarea.";
+      }
+
       document.getElementById("nuevaTarea").value = "";
       document.getElementById("fechaTarea").value = "";
+      tareaEnEdicion = null;
       cargar();
+    }
+
+    function editar(id, texto, fecha) {
+      tareaEnEdicion = id;
+      document.getElementById("nuevaTarea").value = texto;
+      document.getElementById("fechaTarea").value = fecha;
+      const mensaje = document.getElementById("mensaje");
+      mensaje.className = "";
+      mensaje.textContent = "Editando tarea " + id;
+    }
+
+    function cancelarEdicion() {
+      tareaEnEdicion = null;
+      document.getElementById("nuevaTarea").value = "";
+      document.getElementById("fechaTarea").value = "";
+      const mensaje = document.getElementById("mensaje");
+      mensaje.className = "";
+      mensaje.textContent = "";
     }
 
     async function eliminar(id) {
       await fetch(API + "/" + id, { method: "DELETE" });
+      cargar();
+    }
+
+    async function marcarCompletada(id, estado) {
+      await fetch(API + "/" + id, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ completada: estado })
+      });
       cargar();
     }
 

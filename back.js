@@ -6,10 +6,8 @@ app.use(cors());
 app.use(express.json());
 
 // Base de datos en memoria
-let tareas = [
-  { id: 1, texto: "Aprender Node.js", completada: false, fecha: "2025-08-25" },
-  { id: 2, texto: "Subir app a AWS", completada: true, fecha: "2025-08-26" }
-];
+let tareas = [];
+
 
 // Obtener todas las tareas
 app.get("/tareas", (req, res) => {
