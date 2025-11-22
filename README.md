@@ -23,8 +23,8 @@ Ideal para: proyectos académicos o práctica en integración **backend + fronte
 
 ## Paso 1: Clonar el Repositorio
 ```bash
-git clone https://github.com/tu-usuario/gestor-tareas.git
-cd gestor-tareas
+git clone https://github.com/symbolito/tareas-web-.git
+cd tareas-web-
 ````
 
 ## Paso 2: Instalar Dependencias
@@ -47,8 +47,7 @@ Si todo funciona bien, deberías ver:
 
 ## Paso 4: Acceder al Frontend
 
-1. Abre el archivo `front.html` en tu navegador.
-2. El frontend se conectará automáticamente al backend en `http://localhost:8000/tareas`.
+1. En el navegador abre el http://localhost:8000
 
 ## Paso 5: Detener el Servidor
 
