@@ -110,7 +110,7 @@ npm -v
 ## 📥 Paso 3: Clonar el Repositorio
 
 ```bash
-git clone https://github.com/tu-usuario/gestor-tareas.git
+git clone https://github.com/symbolito/tareas-web-.git
 cd gestor-tareas
 ```
 
